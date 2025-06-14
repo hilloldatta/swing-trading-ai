@@ -1,0 +1,12 @@
+# === prompts/pattern_detect.txt ===
+
+Explain in plain English why this is a valid {pattern_type} setup for stock {symbol}.
+Use the following key trading values:
+
+- **Pivot**: {pivot}
+- **Stop Loss**: {stop_loss}
+- **Target**: {target}
+
+Describe why this pattern might work, and mention any price or volume behavior that strengthens the case. Be concise but insightful.
+
+If this is a {pattern_type} pattern, briefly summarize what that means technically.
