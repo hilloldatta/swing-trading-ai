@@ -1,3 +1,3 @@
 """
-Utility functions for swing trading service
+Utility functions for swing trading AI service
 """ 
