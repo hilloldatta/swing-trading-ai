@@ -1,10 +1,13 @@
 import os
 import pandas as pd
 from datetime import date
+import sys
+
+
 from utils.tech_indicators import calculate_sma, calculate_ema, calculate_rsi, calculate_macd
 
-RAW_FOLDER = f"data/raw/{date.today()}"
-PROCESSED_FOLDER = f"data/processed/{date.today()}"
+RAW_FOLDER = f"data/processed/{date.today()}"
+PROCESSED_FOLDER = RAW_FOLDER  # Save over the same processed data
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 
 for file in os.listdir(RAW_FOLDER):
