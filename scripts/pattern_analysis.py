@@ -4,7 +4,7 @@ import json
 import pandas as pd
 from datetime import date
 from utils.patterns.vcp_detector import detect_vcp
-from utils.patterns.cup_handle_detector import detect_cup_with_handle
+from utils.patterns.cup_handle_detector import detect_cup_handle
 from utils.patterns.flag_breakout import detect_flag_breakout
 from utils.patterns.rev_head_shoulders import detect_reverse_head_and_shoulders
 
@@ -20,7 +20,7 @@ for file in os.listdir(RAW_PROCESSED_PATH):
             df = pd.read_csv(os.path.join(RAW_PROCESSED_PATH, file))
 
             vcp = detect_vcp(df)
-            cup = detect_cup_with_handle(df)
+            cup = detect_cup_handle(df)
             flag = detect_flag_breakout(df)
             rhs = detect_reverse_head_and_shoulders(df)
 
