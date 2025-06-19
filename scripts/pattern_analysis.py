@@ -9,7 +9,7 @@ from utils.patterns.flag_breakout import detect_flag_breakout
 from utils.patterns.rev_head_shoulders import detect_reverse_head_and_shoulders
 
 RAW_PROCESSED_PATH = f"data/processed/{date.today()}"
-SIGNALS_PATH = "results/vcp_signals.json"
+SIGNALS_PATH = "results/pattern_signals.json"
 
 signals = []
 
@@ -24,25 +24,39 @@ for file in os.listdir(RAW_PROCESSED_PATH):
             flag = detect_flag_breakout(df)
             rhs = detect_reverse_head_and_shoulders(df)
 
+            # Collect detected patterns for this symbol
+            detected_patterns = []
+            pattern_details = {}
+
             if vcp["signal"]:
-                vcp.update({"symbol": symbol, "type": "vcp"})
-                signals.append(vcp)
+                detected_patterns.append("VCP")
+                pattern_details["VCP"] = vcp
                 print(f"VCP Signal: {symbol} → Pivot: {vcp['pivot']}")
 
             if cup["signal"]:
-                cup.update({"symbol": symbol, "type": "cup"})
-                signals.append(cup)
+                detected_patterns.append("CupHandle")
+                pattern_details["CupHandle"] = cup
                 print(f"Cup Signal: {symbol} → Pivot: {cup['pivot']}")
 
             if flag["signal"]:
-                flag.update({"symbol": symbol, "type": "flag"})
-                signals.append(flag)
+                detected_patterns.append("Flag")
+                pattern_details["Flag"] = flag
                 print(f"Flag Signal: {symbol} → Pivot: {flag['pivot']}")
 
             if rhs["signal"]:
-                rhs.update({"symbol": symbol, "type": "rhs"})
-                signals.append(rhs)
+                detected_patterns.append("RHS")
+                pattern_details["RHS"] = rhs
                 print(f"RHS Signal: {symbol} → Pivot: {rhs['pivot']}")
+
+            # If any patterns detected, create a signal entry
+            if detected_patterns:
+                signal = {
+                    "symbol": symbol,
+                    "patterns": detected_patterns,
+                    "details": pattern_details,
+                    "pivot": pattern_details[detected_patterns[0]]["pivot"]  # Use first pattern's pivot
+                }
+                signals.append(signal)
 
         except Exception as e:
             print(f"Error processing {symbol}: {e}")

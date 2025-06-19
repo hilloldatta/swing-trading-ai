@@ -22,24 +22,32 @@ def detect_market_stage(df: pd.DataFrame) -> str:
 
     df = df.copy()
     df['SMA_30'] = compute_sma(df['Close'], 30)
-    latest = df.iloc[-1]
-    prev = df.iloc[-2] if len(df) >= 2 else latest
 
-    # Check SMA slope
-    slope = compute_slope(df['SMA_30'], 3)
+    # Drop rows with NaN SMA values
+    df = df.dropna(subset=['SMA_30'])
+
+    if len(df) < 10:
+        return "Insufficient Data"
+
+    # Get scalar values instead of Series
+    latest_close = float(df['Close'].iloc[-1])
+    latest_sma = float(df['SMA_30'].iloc[-1])
+
+    # Check SMA slope (ensure we have valid SMA data)
+    slope = compute_slope(df['SMA_30'].dropna(), 3)
 
     # Stage detection logic
-    if slope > 0 and latest['Close'] > latest['SMA_30']:
+    if slope > 0 and latest_close > latest_sma:
         return "Stage 2"
-    elif slope < 0 and latest['Close'] < latest['SMA_30']:
+    elif slope < 0 and latest_close < latest_sma:
         return "Stage 4"
     elif abs(slope) < 0.05:
         # Flat slope = Stage 1 or 3
-        recent_high = df['Close'][-10:].max()
-        recent_low = df['Close'][-10:].min()
-        if latest['Close'] > (recent_high * 0.95):
+        recent_high = float(df['Close'][-10:].max())
+        recent_low = float(df['Close'][-10:].min())
+        if latest_close > (recent_high * 0.95):
             return "Stage 3"
-        elif latest['Close'] < (recent_low * 1.05):
+        elif latest_close < (recent_low * 1.05):
             return "Stage 1"
 
     return "Unclear"

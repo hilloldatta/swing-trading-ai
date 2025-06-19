@@ -27,3 +27,11 @@ Thumbs.db
 data/raw/
 data/processed/
 results/
+
+# Generated config files
+config/market_status.json
+
+# Generated result files
+results/recommendations.json
+results/pattern_signals.json
+results/enriched_recommendations.json
